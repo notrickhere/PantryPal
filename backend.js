@@ -1,8 +1,6 @@
 import express from "express";
 import recipesRoutes from "./routes/recipes.js";
 import pantryRoutes from "./routes/pantry.js";
-import path from "path";
-import { fileURLToPath } from "url";
 
 console.log("Initializing backend...");
 const PORT = process.env.PORT || 3000;

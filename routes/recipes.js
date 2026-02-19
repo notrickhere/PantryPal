@@ -43,8 +43,30 @@ router.get("/", (req, res) => {
   res.json(matched);
 });
 
+router.get("/:id", (req, res) => {
+  const recipe = recipes.find(
+    (r) => r.id === req.params.id
+  );
+
+  if (!recipe)
+    return res.status(404).json({ error: "Not found" });
+
+  res.json(recipe);
+});
+
 /* POST new recipe */
 router.post("/", (req, res) => {
+  let steps = req.body.steps || [];
+
+  if (typeof steps === "string") {
+    steps = steps
+      .split("\n")
+      .map((step) => step.trim())
+      .filter(Boolean);
+  }
+
+  if (!Array.isArray(steps)) steps = [];
+
   const newRecipe = {
     id: Date.now().toString(),
     title: req.body.title,
@@ -53,7 +75,8 @@ router.post("/", (req, res) => {
     description: req.body.description,
     imageUrl:
       req.body.imageUrl ||
-      "https://via.placeholder.com/400"
+      "https://via.placeholder.com/400",
+    steps
   };
 
   recipes.push(newRecipe);
