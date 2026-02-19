@@ -23,26 +23,29 @@ const renderRecipes = (recipes) => {
     col.className = "col-md-6 col-lg-4";
 
     col.innerHTML = `
-        <div class="card recipe-card shadow-sm position-relative">
-            
-            <button class="delete-btn"
-            onclick="deleteRecipe('${recipe.id}')">
-            ✕
+        <a href="/recipe.html?id=${recipe.id}" class="text-decoration-none text-reset">
+          <div class="card recipe-card shadow-sm position-relative">
+            <button
+              class="delete-btn"
+              onclick="deleteRecipe(event, '${recipe.id}')"
+            >
+              ✕
             </button>
 
             <img src="${recipe.imageUrl}" class="card-img-top" />
 
             <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex justify-content-between align-items-center mb-2">
                 <h5 class="card-title">${recipe.title}</h5>
                 <span class="badge-status ${badgeClass(recipe.status)}">
-                ${recipe.status}
+                  ${recipe.status}
                 </span>
-            </div>
+              </div>
 
-            <p class="card-text">${recipe.description}</p>
+              <p class="card-text">${recipe.description}</p>
             </div>
-        </div>
+          </div>
+        </a>
         `;
 
     container.appendChild(col);
@@ -55,7 +58,9 @@ const badgeClass = (status) => {
   return "missing";
 };
 
-window.deleteRecipe = async (id) => {
+window.deleteRecipe = async (event, id) => {
+  event.preventDefault();
+  event.stopPropagation();
   await api.delete(`/api/recipes/${id}`);
   loadRecipes();
 };
@@ -75,7 +80,12 @@ document
         .split(",")
         .map((i) => i.trim()),
       description: form.get("description"),
-      imageUrl: form.get("imageUrl")
+      imageUrl: form.get("imageUrl"),
+      steps: form
+        .get("steps")
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean)
     };
 
     await api.post("/api/recipes", recipe);
