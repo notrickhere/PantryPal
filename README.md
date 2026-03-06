@@ -233,3 +233,12 @@ npm run dev
 ## License
 
 MIT
+
+## Code Review Feedback
+
+Great work on the PantryPal project! The overall structure and idea are clear and the application is easy to understand.
+
+Some suggestions that could further improve the project:
+
+• Improve error handling for API/database operations  
+• Add loading states in the UI when fetching pantry data
